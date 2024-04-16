@@ -8,10 +8,6 @@ public class Main {
     static int[][] board = new int[9][9];
 
     static boolean isPromising(int row, int col, int k){
-        //k가 같으면 원래 있던 스도쿠 번호
-        if(board[row][col] == k){
-            return true;
-        }
 
         //같은 줄에 같은 수가 있는 지 판단
         for(int i = 0; i < 9; i++){
@@ -47,45 +43,33 @@ public class Main {
         return true;
     }
     static boolean solve(int row, int col){
+
+        if(col == 9){
+            return solve(row + 1, 0);
+        }
+
         if(row == 9){
             print();
             return true;
         }
 
-        if(board[row][col] != 0){
-            boolean isSolve;
-            if(col == 8){
-                isSolve = solve(row + 1, 0);
-            }
-            else{
-                isSolve = solve(row, col + 1);
-            }
-
-            if(isSolve){
-                return true;
-            }
-        }
-        else{
+        if(board[row][col] == 0){
             for(int k = 1; k <= 9; k++){
                 if(isPromising(row, col, k)){
                     board[row][col] = k;
-                    boolean isSolve;
-                    if(col == 8){
-                        isSolve = solve(row + 1, 0);
-                    }
-                    else{
-                        isSolve = solve(row, col + 1);
-                    }
-
+                    boolean isSolve = solve(row, col + 1);
                     if(isSolve){
                         return true;
                     }
                     board[row][col] = 0;
                 }
             }
+            return false;
+        }
+        else{
+            return solve(row, col + 1);
         }
 
-        return false;
     }
 
     static void print(){
