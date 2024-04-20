@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,20 +14,12 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         n = Integer.parseInt(st.nextToken());
         m = Integer.parseInt(st.nextToken());
-        array = new int[n][n];
+        array = new int[n+1][n+1];
 
-        for(int i = 0; i < n; i++){
+        for(int i = 1; i <= n; i++){
             st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < n; j++){
-                if(i == 0 && j == 0){
-                    array[i][j] = Integer.parseInt(st.nextToken());
-                }
-                else if(j == 0){
-                    array[i][j] = array[i-1][n-1] + Integer.parseInt(st.nextToken());
-                }
-                else{
-                    array[i][j] = array[i][j-1] + Integer.parseInt(st.nextToken());
-                }
+            for(int j = 1; j <= n; j++){
+                array[i][j] = array[i-1][j] + array[i][j-1] - array[i-1][j-1] + Integer.parseInt(st.nextToken());
             }
         }
 
@@ -42,22 +35,8 @@ public class Main {
             int y2 = Integer.parseInt(st.nextToken());
             int x2 = Integer.parseInt(st.nextToken());
 
-            int sum = 0;
-            for(int j = y1 - 1; j <= y2 - 1; j++){
-                int s;
-                if(x1 == 1 && j == 0){
-                    s = 0;
-                }
-                else if(x1 == 1){
-                    s = array[j-1][n-1];
-                }
-                else{
-                    s = array[j][x1 - 2];
-                }
-                sum += array[j][x2 - 1] - s;
-            }
-           sb.append(sum).append("\n");
-
+            int sum = array[y2][x2] - array[y1-1][x2] - array[y2][x1-1] + array[y1-1][x1-1];
+            sb.append(sum).append("\n");
         }
 
         System.out.println(sb);
