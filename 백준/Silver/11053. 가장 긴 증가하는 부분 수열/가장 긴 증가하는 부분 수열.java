@@ -29,8 +29,8 @@ public class Main {
         }
     }
 
-    static int binarySearch(int value){
-        return binarySearch(value, 1, dist.length - 1);
+    static int binarySearch(int value, int size){
+        return binarySearch(value, 1, size + 1);
     }
 
 
@@ -39,7 +39,7 @@ public class Main {
         int max = 0;
         for(int i = 1; i <= n; i++){
             int num = numbers[i];
-            int d = binarySearch(num);
+            int d = binarySearch(num, max);
             int index = d + 1;
             dp[i] = index;
             dist[index] = Math.min(dist[index], num);
@@ -58,21 +58,21 @@ public class Main {
         dist = new Integer[n + 1];
 
 
-        st = new StringTokenizer(br.readLine());
+
         dp[0] = 0;
         numbers[0] = 0;
-
-        for(int i = 1; i <= n; i++){
-            numbers[i] = Integer.parseInt(st.nextToken());
-        }
-
         Arrays.fill(dist, Integer.MAX_VALUE);
         dist[0] = 0;
 
+        st = new StringTokenizer(br.readLine());
+        for(int i = 1; i <= n; i++){
+            numbers[i] = Integer.parseInt(st.nextToken());
+        }
 
 
         System.out.println(calc(n));
 //        System.out.println(Arrays.toString(dp));
 //        System.out.println(Arrays.toString(dist));
+
     }
 }
