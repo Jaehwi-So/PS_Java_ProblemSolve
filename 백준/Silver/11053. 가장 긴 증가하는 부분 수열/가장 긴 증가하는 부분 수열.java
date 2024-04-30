@@ -8,7 +8,6 @@ import java.util.StringTokenizer;
 public class Main {
     static Integer[] numbers;
     static Integer[] dp;
-
     static Integer[] dist;
 
 
@@ -36,16 +35,18 @@ public class Main {
 
 
 
-    static Integer calc(int n){
-        if(dp[n] == null){
-            int num = numbers[n];
+    static int calc(int n){
+        int max = 0;
+        for(int i = 1; i <= n; i++){
+            int num = numbers[i];
             int d = binarySearch(num);
             int index = d + 1;
-            dp[n] = index;
+            dp[i] = index;
             dist[index] = Math.min(dist[index], num);
+            max = Math.max(max, index);
         }
+        return max;
 
-        return dp[n];
     }
 
     public static void main(String[] args) throws IOException {
@@ -68,17 +69,10 @@ public class Main {
         Arrays.fill(dist, Integer.MAX_VALUE);
         dist[0] = 0;
 
-        for(int i = 1; i <= n; i++){
-            calc(i);
-        }
 
 
-        int max = Integer.MIN_VALUE;
-        for(int i = 1; i <= n; i++){
-            max = Math.max(dp[i], max);
-        }
+        System.out.println(calc(n));
 //        System.out.println(Arrays.toString(dp));
 //        System.out.println(Arrays.toString(dist));
-        System.out.println(max);
     }
 }
