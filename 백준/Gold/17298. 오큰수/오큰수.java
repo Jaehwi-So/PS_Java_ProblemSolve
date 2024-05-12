@@ -18,24 +18,15 @@ public class Main {
         }
 
         Stack<Integer> stack = new Stack<>();
-        Queue<Integer> queue = new LinkedList<>();
-        for(int i = n - 1; i >= 0; i--){
-            queue.clear();
+
+        for(int i = 0; i < n; i++){
             while(!stack.isEmpty()){
-                int k = stack.pop();
-                queue.add(k);
-                if(k > array[i]){
-                    result[i] = k;
+                if(array[stack.peek()] >= array[i]){
                     break;
                 }
+                result[stack.pop()] = array[i];
             }
-            if(result[i] != -1){
-                while(!queue.isEmpty()){
-                    stack.push(queue.poll());
-                }
-            }
-
-            stack.push(array[i]);
+            stack.push(i);
         }
 
 
