@@ -11,8 +11,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
-//
-//        st = new StringTokenizer(br.readLine());
+
         long[] array = new long[n];
         for(int i = 0; i < n; i++){
             st = new StringTokenizer(br.readLine());
@@ -20,7 +19,6 @@ public class Main {
         }
 
         Stack<Long> stack = new Stack<>();
-//        Queue<Long> queue = new LinkedList<>();
         Stack<Long> temp = new Stack<>();
         long count = 0;
 
@@ -34,15 +32,6 @@ public class Main {
                 count++;
             }
 
-//            System.out.println(stack + " " + (stack.isEmpty() ? -1 : stack.peek()));
-//            count += stack.size();
-
-//            while(!stack.isEmpty() && stack.peek() == k){
-//                temp.push(stack.pop());
-//                count += 1;
-//            }
-//
-
             if(!stack.isEmpty()){
                 if(map.containsKey(k) && stack.peek() == k){
                     long sameCnt = map.get(k);
@@ -51,20 +40,10 @@ public class Main {
                         count++;
                     }
                 }
-
                 else{
                     count++;
                 }
-
-
             }
-
-
-
-//            while(!temp.isEmpty()){
-//                stack.push(temp.pop());
-//            }
-
             stack.push(k);
             if(map.containsKey(k)){
                 map.replace(k, map.get(k) + 1L);
