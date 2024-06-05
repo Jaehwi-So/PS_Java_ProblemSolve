@@ -27,7 +27,7 @@ public class Main {
                     dp[i][j][2] = Math.max(dp[i-1][j][2], dp[i-1][j-1][1]);
                 }
                 else if(array[i] == 2) {
-                    if(i == 1 && j == 1){
+                    if(j == 1){
                         continue;
                     }
                     else{
