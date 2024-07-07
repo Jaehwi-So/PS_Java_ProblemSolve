@@ -3,17 +3,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-class Edge implements Comparable<Edge>{
+class Node implements Comparable<Node>{
     int index;
     int weight;
-    public Edge(int index, int weight){
+    public Node(int index, int weight){
         this.index = index;
         this.weight = weight;
     }
 
     @Override
-    public int compareTo(Edge e){
-        return this.weight - e.weight;
+    public int compareTo(Node n){
+        return this.weight - n.weight;
     }
 }
 
@@ -21,24 +21,28 @@ public class Main {
     static int V;
     static int K;
     static int E;
-    static List<Edge>[] graph;
+    static List<Node>[] graph;
     static int[] distance;
     static final int INF = 1000000;
     static void dijkstra(int start){
         boolean[] visited = new boolean[V+1];
         Arrays.fill(distance, INF);
         distance[start] = 0;
-        PriorityQueue<Edge> queue = new PriorityQueue<>();
-        queue.offer(new Edge(start, 0));
+        PriorityQueue<Node> queue = new PriorityQueue<>();
+        queue.offer(new Node(start, 0));
 
         while(!queue.isEmpty()){
-            Edge edge = queue.poll();
-            int current = edge.index;
-            if(!visited[current]){
-                visited[current] = true;
-                for(Edge e : graph[current]){
-                    distance[e.index] = Math.min(distance[current] + e.weight, distance[e.index]);
-                    queue.add(new Edge(e.index, distance[e.index]));
+            Node edge = queue.poll();
+            int u = edge.index;
+            if(!visited[u]){
+                visited[u] = true;
+                for(Node n : graph[u]){
+                    int v = n.index;
+                    int weight = n.weight;
+                    if (!visited[v] && distance[u] + weight < distance[v]) {
+                        distance[v] = distance[u] + weight;
+                        queue.add(new Node(v, distance[v]));
+                    }
                 }
             }
         }
@@ -54,14 +58,15 @@ public class Main {
         graph = new LinkedList[V + 1];
         distance = new int[V + 1];
         for(int i = 1; i <= V; i++){
-            graph[i] = new LinkedList<Edge>();
+            graph[i] = new LinkedList<Node>();
         }
+
         for(int i = 0; i < E; i++){
             st = new StringTokenizer(br.readLine());
             int u = Integer.parseInt(st.nextToken());
             int v = Integer.parseInt(st.nextToken());
             int w = Integer.parseInt(st.nextToken());
-            graph[u].add(new Edge(v, w));
+            graph[u].add(new Node(v, w));
         }
 
         dijkstra(K);
