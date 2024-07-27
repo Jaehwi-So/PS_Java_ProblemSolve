@@ -1,17 +1,12 @@
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 class Register{
-    char[] numbers;
+
+    int numbers;
     String commands;
 
-    public Register(char[] numbers, String commands){
+    public Register(int numbers, String commands){
         this.numbers = numbers;
         this.commands = commands;
     }
@@ -24,89 +19,42 @@ public class Main {
     static StringBuilder sb = new StringBuilder();
     static void bfs(Register start){
         Queue<Register> queue = new LinkedList<>();
-        visited[getNumber(start.numbers)] = true;
+        visited[start.numbers] = true;
         queue.offer(start);
 
         while(!queue.isEmpty()){
             Register current = queue.poll();
-            int currentNum = getNumber(current.numbers);
+            int currentNum = current.numbers;
 
             if(currentNum == target){
                 sb.append(current.commands).append("\n");
                 return;
             }
 
-            int D = (currentNum * 2) % 10000;
+            int D = (2 * currentNum) % 10000;
+            int S = currentNum == 0 ? 9999 : currentNum - 1;
+            int L = (currentNum % 1000) * 10 + currentNum / 1000;
+            int R = (currentNum % 10) * 1000 + currentNum / 10;
+
             if(!visited[D]){
-                queue.offer(new Register(makrCharArray(D), current.commands + "D"));
+                queue.offer(new Register(D, current.commands + "D"));
                 visited[D] = true;
             }
-
-            int S = (currentNum - 1);
-            if(currentNum == 0){
-                S = 9999;
-            }
             if(!visited[S]){
-                queue.offer(new Register(makrCharArray(S), current.commands + "S"));
+                queue.offer(new Register(S, current.commands + "S"));
                 visited[S] = true;
             }
-
-            int L = getNumber(rotateLeft(current.numbers));
             if(!visited[L]){
-                queue.offer(new Register(makrCharArray(L), current.commands + "L"));
+                queue.offer(new Register(L, current.commands + "L"));
                 visited[L] = true;
             }
-
-            int R = getNumber(rotateRight(current.numbers));
             if(!visited[R]){
-                queue.offer(new Register(makrCharArray(R), current.commands + "R"));
+                queue.offer(new Register(R, current.commands + "R"));
                 visited[R] = true;
             }
         }
     }
 
-
-    static char[] makrCharArray(int k){
-        char[] result = new char[4];
-        Arrays.fill(result, '0');
-        int poo = 1000;
-        for(int i = 0; i < 4; i++){
-            result[i] = (char)((k / poo) + '0');
-            k %= poo;
-            poo /= 10;
-        }
-        return result;
-    }
-
-    static int getNumber(char[] chs){
-        int result = 0;
-        int poo = 1;
-        for(int i = chs.length - 1; i >= 0; i--){
-            result += (Character.getNumericValue(chs[i]) * poo);
-            poo *= 10;
-        }
-        return result;
-    }
-
-    static char[] rotateLeft(char[] chs){
-        char[] temp = Arrays.copyOf(chs, chs.length);
-        char tmp = chs[0];
-        for(int i = 0; i < temp.length - 1; i++){
-            temp[i] = temp[i+1];
-        }
-        temp[3] = tmp;
-        return temp;
-    }
-
-    static char[] rotateRight(char[] chs){
-        char[] temp = Arrays.copyOf(chs, chs.length);
-        char tmp = chs[3];
-        for(int i = 2; i >= 0; i--){
-            temp[i+1] = temp[i];
-        }
-        temp[0] = tmp;
-        return temp;
-    }
 
 
     public static void main(String[] args) throws IOException {
@@ -116,12 +64,10 @@ public class Main {
         int t = Integer.parseInt(st.nextToken());
         for(int l = 0; l < t; l++){
             st = new StringTokenizer(br.readLine());
-            char[] register = makrCharArray(Integer.parseInt(st.nextToken()));
+            int start = Integer.parseInt(st.nextToken());
             target = Integer.parseInt(st.nextToken());
             visited = new boolean[20000];
-            bfs(new Register(register, ""));
-
-
+            bfs(new Register(start, ""));
         }
         
         System.out.println(sb);
