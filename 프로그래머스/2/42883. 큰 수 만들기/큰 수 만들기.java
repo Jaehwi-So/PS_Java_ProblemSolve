@@ -34,9 +34,5 @@ class Solution {
 }
 
 /**
-list.size() - count + 1
-count = 4 1231234 -> 3  
-count = 3 1234 -> 2   
-count = 2 134 -> 3
-count = 1 34 -> 4
+333222111
 **/
