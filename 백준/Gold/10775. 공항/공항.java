@@ -4,40 +4,38 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int[] array;
-    static int find(int x){
-        if(x == array[x]){
-            return x;
-        }
+    static int[] parent;
 
-        array[x] = find(array[x]);
-        return array[x];
+    static int find(int n){
+        if(parent[n] != n){
+            parent[n] = find(parent[n]);
+        }
+        return parent[n];
     }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int n = Integer.parseInt(st.nextToken());
-        array = new int[n+1];
+        parent = new int[n+1];
         for(int i = 1; i <= n; i++){
-            array[i] = i;
+            parent[i] = i;
         }
 
         st = new StringTokenizer(br.readLine());
         int p = Integer.parseInt(st.nextToken());
-        int result = 0;
-        for(int i = 1; i <= p; i++){
+        int count = 0;
+        for(int i = 0; i < p; i++){
             st = new StringTokenizer(br.readLine());
             int k = Integer.parseInt(st.nextToken());
             int index = find(k);
             if(index == 0){
                 break;
             }
-            result++;
-            array[index] = find(index - 1);
+            parent[index] = find(index - 1);
+            count++;
         }
-
-        System.out.println(result);
+        System.out.println(count);
 
     }
 }
