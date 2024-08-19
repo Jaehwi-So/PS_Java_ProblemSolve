@@ -4,6 +4,9 @@ class Solution {
     static Map<Long, Long> parent = new HashMap();
     
     static void union(long k1, long k2){
+        if(!parent.containsKey(k2)){
+            parent.put(k2, k2);
+        }
         long n1 = find(k1);
         long n2 = find(k2);
         if(n1 > n2){
@@ -23,27 +26,10 @@ class Solution {
     
     public long[] solution(long k, long[] room_number) {
         
-        long[] temp = new long[room_number.length];
-        
-        for(int i = 0; i < room_number.length; i++){
-            temp[i] = room_number[i];
+        for(long l : room_number){
+            parent.put(l, l);
         }
-        Arrays.sort(temp);
-        
-        long index = 0;
-        for(long l : temp){
-            index++;
-            if(l > index){
-                parent.put(index, index);
-                index = l;
-            }
-            parent.put(index, index);
-        }
-        index++;
-        parent.put(index, index);
-        
-        // System.out.println(parent);
-        
+                
         long[] answer = new long[room_number.length];
         
         for(int i = 0; i < room_number.length; i++){
