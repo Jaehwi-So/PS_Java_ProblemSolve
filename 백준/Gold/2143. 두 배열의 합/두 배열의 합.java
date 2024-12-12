@@ -2,8 +2,39 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    static int binarySearchLower(List<Long> list, long number){
+        int left = 0;
+        int right = list.size();
+        while(left < right){
+            int mid = (left + right) / 2;
+            if(list.get(mid) >= number){
+                right = mid;
+            }
+            else{
+                left = mid + 1;
+            }
+        }
 
+        return right;
+    }
+
+    static int binarySearchUpper(List<Long> list, long number){
+        int left = 0;
+        int right = list.size();
+        while(left < right){
+            int mid = (left + right) / 2;
+            if(list.get(mid) <= number){
+                left = mid + 1;
+            }
+            else{
+                right = mid;
+            }
+        }
+
+        return right;
+    }
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         long t = Long.parseLong(st.nextToken());
@@ -25,37 +56,39 @@ public class Main {
         }
 
         List<Long> sumA = new ArrayList<>();
-        HashMap<Long, Integer> cntA = new HashMap<>();
+        List<Long> sumB = new ArrayList<>();
 
         for(int i = 0; i < n; i++){
             long current = 0;
             for(int j = i; j < n; j++){
                 current += a[j];
-                if(cntA.containsKey(current)){
-                    cntA.put(current, cntA.get(current) + 1);
-                }
-                else{
-                    sumA.add(current);
-                    cntA.put(current, 1);
-                }
+                sumA.add(current);
             }
         }
-
-        Collections.sort(sumA);
-        long result = 0;
 
         for(int i = 0; i < m; i++){
             long current = 0;
             for(int j = i; j < m; j++){
                 current += b[j];
-                long aNum = t - current;
-                int index = Collections.binarySearch(sumA, aNum);
-                if(index >= 0){
-                    result += cntA.get(aNum);
-                }
+                sumB.add(current);
             }
         }
 
+
+        Collections.sort(sumA);
+        Collections.sort(sumB);
+
+        long result = 0;
+
+        for(long aNum : sumA){
+            long searchNum = t - aNum;
+            int bStart = binarySearchLower(sumB, searchNum);
+            int bEnd = binarySearchUpper(sumB, searchNum);
+
+            if(bStart != -1 && bEnd != -1){
+                result += (bEnd - bStart);
+            }
+        }
 
         System.out.println(result);
 
