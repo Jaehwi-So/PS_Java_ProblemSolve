@@ -42,23 +42,34 @@ public class Main {
         int current = 0;
         int index = 0;
 
-        // 도착 오름차순 정렬
+        // 도착 내림차순 정렬
         PriorityQueue<Box> pq = new PriorityQueue(new Comparator<Box>() {
             @Override
             public int compare(Box b1, Box b2) {
-                return b1.end - b2.end;
+                return b2.end - b1.end;
             }
         });
 
         int result = 0;
+        Stack<Box> stack = new Stack<>();
 
         // 마을을 차례로 순회
         for(int i = 1; i <= n; i++) {
-            // 내릴 수 있는 박스는 모두 내림
-            while (!pq.isEmpty() && pq.peek().end == i) {
+
+            // 내릴 수 있는 박스는 모두 내림 (우선순위 큐의 끝이므로 모두 순회)
+            while (!pq.isEmpty()) {
                 Box b = pq.poll();
-                current -= b.amount;
-                result += b.amount;
+                if(b.end == i){
+                    current -= b.amount;
+                    result += b.amount;
+                }
+                else{
+                    stack.push(b);
+                }
+            }
+
+            while(!stack.isEmpty()){
+                pq.offer(stack.pop());
             }
 
             // 현재 실을 수 있는 박스 순회
