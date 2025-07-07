@@ -19,6 +19,10 @@ public class Main {
         subtree[index] = size;
     }
 
+    static long combination(int n){
+        return ((long)n * (n-1)) / 2;
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -42,12 +46,11 @@ public class Main {
 //        visited[1] = true;
         dfs(1);
         long result = 0;
-        int pair = (n * (n-1)) / 2;   //7 6 5 4 3 2 1   8C2 = (8 * 7) / 2  28 * 7
+        long pair = combination(n);   //7 6 5 4 3 2 1   8C2 - 5C2 = 28 - 10
         for(int i = 2; i <= n; i++){
             int existPair = n - subtree[i];
-            int calc = pair - ((existPair * (existPair-1)) / 2);
-//            System.out.println(calc + " ");
-            result += (long)calc;
+            long calc = pair - combination(existPair);
+            result += calc;
         }
         System.out.println(result);
     }
