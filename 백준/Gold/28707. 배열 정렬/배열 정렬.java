@@ -1,60 +1,60 @@
 import java.io.*;
 import java.util.*;
 
+class Pair implements Comparable<Pair>{
+    String key;
+    int value;
+    public Pair(String key, int value){
+        this.key = key;
+        this.value = value;
+    }
+
+    public int compareTo(Pair p){
+        return this.value - p.value;
+    }
+}
+
 public class Main {
     static int n;
     static int m;
     static int[] origin;
     static int[] answer;
     static int[][] command;
-    static Map<Integer, Integer> map = new HashMap<>();
+    static Map<String, Integer> map = new HashMap<>();
 
-    static int parse(int[] array){
-        int result = 0;
-        int mul = 1;
-        for(int i = array.length - 1; i >= 0; i--){
-            result += array[i] * mul;
-            mul *= 10;
+    static String parse(int[] array){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < array.length; i++){
+            sb.append(array[i]);
         }
-        return result;
+        return sb.toString();
     }
 
-    static int reverse(int number, int idx1, int idx2){
-        int mul1 = (int)Math.pow(10, n - idx1 - 1);
-        int mul2 = (int)Math.pow(10, n - idx2 - 1);
-
-        int n1 = (number / mul1) % 10;
-        int n2 = (number / mul2) % 10;
-        number -= n1 * mul1;
-        number -= n2 * mul2;
-        number += n1 * mul2;
-        number += n2 * mul1;
-        return number;
-    }
-
-    static void dijkstra(int origin){
-        PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>() {
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                return o1[1] - o2[1];
-            }
-        });
-        pq.offer(new int[]{origin, 0});
+    static void dijkstra(String origin){
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        pq.offer(new Pair(origin, 0));
         map.put(origin, 0);
 
         while(!pq.isEmpty()){
-            int[] current = pq.poll();
-            if(map.get(current[0]) < current[1]) continue;
+            Pair current = pq.poll();
+            if(map.get(current.key) == current.value){
+                for(int i = 0; i < m; i++){
+                    char[] next = current.key.toCharArray();
 
-            for(int i = 0; i < m; i++){
-                int nextKey = reverse(current[0], command[i][0], command[i][1]);
-                int nextVal = current[1] + command[i][2];
+                    char temp = next[command[i][0]];
+                    next[command[i][0]] = next[command[i][1]];
+                    next[command[i][1]] = temp;
 
-                if(map.containsKey(nextKey) && map.get(nextKey) <= nextVal) continue;
-                map.put(nextKey, nextVal);
-                pq.offer(new int[]{nextKey, nextVal});
+                    String nextStr = String.valueOf(next);
+//                    System.out.println(map);
+                    int nextVal = current.value + command[i][2];
+
+                    if(!map.containsKey(nextStr) || map.get(nextStr) > nextVal){
+                        map.put(nextStr, nextVal);
+                        pq.offer(new Pair(nextStr, nextVal));
+                    }
+                }
             }
-
         }
     }
 
@@ -83,10 +83,9 @@ public class Main {
             command[i][2] = Integer.parseInt(st.nextToken());
         }
 
-
         dijkstra(parse(origin));
 //        System.out.println(map);
-        int ans = parse(answer);
+        String ans = parse(answer);
         if(!map.containsKey(ans)){
             System.out.println(-1);
         }
