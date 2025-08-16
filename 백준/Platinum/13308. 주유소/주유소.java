@@ -5,7 +5,7 @@ public class Main {
     static int n, m;
     static int[] costs;
     static List<int[]>[] graph;
-    static final long MAX = 4000L * 2500L * 2500L;
+    static final long MAX = Long.MAX_VALUE;
 
     static long dijakstra(){
 
