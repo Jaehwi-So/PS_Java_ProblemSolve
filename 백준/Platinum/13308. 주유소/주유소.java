@@ -5,17 +5,32 @@ public class Main {
     static int n, m;
     static int[] costs;
     static List<int[]>[] graph;
-    static final long MAX = Long.MAX_VALUE;
+    static final long MAX = 4000L * 2500L * 2500L;
 
     static long dijakstra(){
 
         long[][] visited = new long[n+1][2501];
+        long[][] dp = new long[n+1][2]; //최소 기름값일때의 최소값.
         for(long[] line : visited){
             Arrays.fill(line, MAX);
         }
-        Queue<long[]> queue = new LinkedList<>(); //노드, 총비용, 최소기름비용
+        for(long[] line : dp){
+            line[0] = MAX;
+            line[1] = MAX;
+        }
+
+        PriorityQueue<long[]> queue = new PriorityQueue<>(new Comparator<long[]>() {
+            @Override
+            public int compare(long[] o1, long[] o2) {
+                if(o1[1] == o2[1]) return Long.compare(o1[2], o2[2]);
+                return Long.compare(o1[1], o2[1]);
+            }
+        });
+
         queue.offer(new long[]{1, 0, costs[1]});
         visited[1][costs[1]] = 0;
+        dp[1][0] = costs[1];
+        dp[1][1] = 0;
 
         while(!queue.isEmpty()){
             long[] current = queue.poll();
@@ -25,9 +40,17 @@ public class Main {
             for(int[] next : graph[(int)current[0]]){
                 long val = current[1] + (current[2] * next[1]);
                 int min = Math.min(costs[next[0]], (int)current[2]);
+                if(dp[next[0]][0] <= min && dp[next[0]][1] <= val) continue;
                 if(visited[next[0]][min] > val){
                     visited[next[0]][min] = val;
                     queue.offer(new long[]{next[0], val, min});
+                    if(dp[next[0]][0] > min){
+                        dp[next[0]][0] = min;
+                        dp[next[0]][1] = val;
+                    }
+                    else if(dp[next[0]][0] == min){
+                        dp[next[0]][1] = Math.min(dp[next[0]][1], val);
+                    }
                 }
             }
         }
@@ -61,6 +84,15 @@ public class Main {
             int w = Integer.parseInt(st.nextToken());
             graph[s].add(new int[]{e, w});
             graph[e].add(new int[]{s, w});
+        }
+
+        for(int i = 1; i <= n; i++){
+            Collections.sort(graph[i], new Comparator<int[]>() {
+                @Override
+                public int compare(int[] o1, int[] o2) {
+                    return costs[o1[0]] - costs[o2[0]];
+                }
+            });
         }
 
         System.out.println(dijakstra());
